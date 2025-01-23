@@ -1,6 +1,22 @@
+import Header from "../../components/user/Header";
+import Landing from "../../components/user/Landing";
+import Products from "../../components/user/Products";
+
 const Home = () => (
-  <div className="h-screen flex items-center justify-center bg-gray-50">
-    <h1 className="text-2xl font-bold">Welcome to Your App</h1>
+  <div className="min-h-screen flex flex-col bg-gray-50">
+    {/* Header */}
+    <Header />
+
+    {/* Main Content */}
+    <main className="flex flex-col">
+      {/* Landing Section */}
+      <Landing />
+
+      {/* Products Section */}
+      <div className="w-full px-4 py-8 sm:py-12 lg:py-16">
+        <Products />
+      </div>
+    </main>
   </div>
 );
 
