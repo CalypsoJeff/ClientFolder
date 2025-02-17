@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { loginUser } from "../../api/services/auth/user-auth-service";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../api/endpoints/auth/user-auth";
 
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
@@ -22,13 +22,12 @@ export default function Login() {
       response?.data?.status === "success" && navigate("/");
     } catch (error) {
       toast.error(error?.data?.message, {
-        position: toast.POSITION.BOTTOM_RIGHT,
+        position: "bottom-right",
       });
     }
   };
 
   const handleGoogleLogin = () => {
-    // Implement Google login logic here
     console.log("Google login clicked");
     alert("Google login functionality to be implemented.");
   };

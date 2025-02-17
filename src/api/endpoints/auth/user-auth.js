@@ -1,6 +1,9 @@
 import END_POINTS from "../../../constants/endpoints";
-import { register, resendOTP, verifyOTP } from "../../services/auth/user-auth-service";
+import { login, register, resendOTP, verifyOTP } from "../../services/auth/user-auth-service";
 
+export const loginUser = (userData) => {
+    return login(END_POINTS.LOGIN, userData);
+  };
 
 export const registerUser = (userData)=>{
     return register(END_POINTS.REGISTER,userData)
@@ -11,5 +14,5 @@ export const registerUser = (userData)=>{
   }
 
   export const resendOTPVerification = (phone)=>{
-    return resendOTP(END_POINTS.VERIFY_OTP,phone)
+    return resendOTP(END_POINTS.RESEND_OTP,phone)
   }

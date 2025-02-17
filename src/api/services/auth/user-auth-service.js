@@ -1,9 +1,12 @@
-import END_POINTS from "../../../constants/endpoints";
 import CONFIG_KEYS from "../../../config";
 import authInstanceAxios from "../../middlewares/interceptor";
 
-export const loginUser = (userData) => {
-  return login(END_POINTS.LOGIN, userData);
+export const login = (endpoint, userData) => {
+  const response = authInstanceAxios.post(
+    `${CONFIG_KEYS.API_BASE_URL}/${endpoint}`,
+    userData
+  );
+  return response;
 };
 
 export const register = async (endpoint, userData) => {
@@ -25,7 +28,7 @@ export const verifyOTP = async (endpoint, otpData) => {
 export const resendOTP = async (endpoint, phone) => {
   const response = await authInstanceAxios.post(
     `${CONFIG_KEYS.API_BASE_URL}/${endpoint}`,
-    phone
+    { phone }
   );
   return response;
 };

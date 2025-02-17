@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-// import { loginUser } from "../../api/services/auth/user-auth-service";
 import { registerUser } from "../../api/endpoints/auth/user-auth";
 import { useNavigate } from "react-router";
 
