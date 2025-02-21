@@ -32,12 +32,6 @@ const UserRoutes = () => {
       <Route path="/category" element={<Category />} />
       <Route path="/products" element={<Product />} />
       <Route path="/userlist" element={<UserList />} />
-
-
-
-
-
-
       {/* </Route> */}
     </Routes>
   );

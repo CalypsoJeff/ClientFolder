@@ -212,40 +212,52 @@ const Competitions = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {competitions.map((comp) => (
-                  <TableRow key={comp._id}>
-                    <TableCell>{comp.name}</TableCell>
-                    <TableCell>{comp.category.join(", ")}</TableCell>
-                    <TableCell>
-                      {comp.place}, {comp.state.join(", ")}
-                    </TableCell>
-                    <TableCell>{comp.maxRegistrations}</TableCell>
-                    <TableCell>₹{comp.cost}</TableCell>
-                    <TableCell>
-                      <button
-                        className="bg-blue-500 text-white px-3 py-1 rounded mr-2 hover:scale-105 transition-transform"
-                        onClick={() => openViewModal(comp)}
-                      >
-                        👁 View
-                      </button>
-                      <button
-                        className="bg-yellow-500 text-white px-3 py-1 rounded mr-2 hover:scale-105 transition-transform"
-                        onClick={() => openModal(comp)}
-                      >
-                        ✏️ Edit
-                      </button>
-                      <button
-                        className="bg-red-500 text-white px-3 py-1 rounded hover:scale-105 transition-transform"
-                        onClick={() => handleDeleteCompetition(comp._id)}
-                      >
-                        🗑️ Delete
-                      </button>
+                {competitions.length > 0 ? (
+                  competitions.map((comp) => (
+                    <TableRow key={comp._id}>
+                      <TableCell>{comp.name}</TableCell>
+                      <TableCell>{comp.category.join(", ")}</TableCell>
+                      <TableCell>
+                        {comp.place}, {comp.state.join(", ")}
+                      </TableCell>
+                      <TableCell>{comp.maxRegistrations}</TableCell>
+                      <TableCell>₹{comp.cost}</TableCell>
+                      <TableCell>
+                        <button
+                          className="bg-blue-500 text-white px-3 py-1 rounded mr-2 hover:scale-105 transition-transform"
+                          onClick={() => openViewModal(comp)}
+                        >
+                          👁 View
+                        </button>
+                        <button
+                          className="bg-yellow-500 text-white px-3 py-1 rounded mr-2 hover:scale-105 transition-transform"
+                          onClick={() => openModal(comp)}
+                        >
+                          ✏️ Edit
+                        </button>
+                        <button
+                          className="bg-red-500 text-white px-3 py-1 rounded hover:scale-105 transition-transform"
+                          onClick={() => handleDeleteCompetition(comp._id)}
+                        >
+                          🗑️ Delete
+                        </button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan="6"
+                      className="text-center py-4 text-gray-500"
+                    >
+                      No competitions available. Add a new competition to get
+                      started.
                     </TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
-          )}                            
+          )}
 
           <CompetitionModal
             isOpen={modalIsOpen}
