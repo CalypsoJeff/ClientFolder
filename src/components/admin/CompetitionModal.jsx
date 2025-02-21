@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-"use client";
-
 import { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -738,8 +736,6 @@ const CompetitionModal = ({ isOpen, onClose, onSubmit, competition }) => {
       <h2 className="text-2xl font-bold mb-6 text-center">
         {competition ? "Edit Competition" : "Add Competition"}
       </h2>
-
-      {/* Progress Indicator */}
       {renderStepIndicator()}
 
       {renderStep()}

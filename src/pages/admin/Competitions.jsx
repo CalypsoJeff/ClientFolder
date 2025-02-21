@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-"use client";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import {
@@ -19,6 +18,7 @@ import {
   loadCompetitions,
 } from "../../api/endpoints/competitions/admin-competition";
 import Modal from "react-modal";
+import { Menu } from "lucide-react";
 
 // Competition View Modal Component
 const ViewCompetitionModal = ({ isOpen, onClose, competition }) => {
@@ -178,8 +178,17 @@ const Competitions = () => {
         toggleSidebar={() => setIsSidebarOpen(false)}
       />
 
-      <div className="flex-1 p-6">
-        <h1 className="text-2xl font-bold">Competitions Management</h1>
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header with Hamburger Menu */}
+        <header className="flex items-center justify-between h-16 px-6 bg-white border-b">
+          <button
+            onClick={() => setIsSidebarOpen(true)} // ✅ Opens sidebar
+            className="text-gray-500 focus:outline-none lg:hidden"
+          >
+            <Menu size={24} />
+          </button>
+          <h1 className="text-2xl font-bold">Competitions Management</h1>
+        </header>
         <div className="p-5">
           <button
             className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-md shadow-lg hover:scale-105 transition-transform duration-300"
@@ -236,7 +245,7 @@ const Competitions = () => {
                 ))}
               </TableBody>
             </Table>
-          )}
+          )}                            
 
           <CompetitionModal
             isOpen={modalIsOpen}
