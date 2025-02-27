@@ -20,26 +20,98 @@ import Modal from "react-modal";
 import { Menu } from "lucide-react";
 import TrekkingModal from "../../components/admin/TrekkingModal";
 
+const ViewTrekkingModal = ({ isOpen, onClose, trekking }) => {
+  if (!trekking) return null;
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onClose}
+      className="bg-white p-6 rounded-lg shadow-xl max-w-3xl mx-auto mt-20 overflow-auto max-h-[90vh]"
+      overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start"
+    >
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Left Side - Text Content */}
+        <div className="flex-1">
+          <h2 className="text-2xl font-bold mb-4">{trekking.name}</h2>
+          <div className="space-y-3">
+            <p>
+              <strong>Category:</strong> {trekking.category.join(", ")}
+            </p>
+            <p>
+              <strong>Location:</strong> {trekking.place},{" "}
+              {trekking.state.join(", ")}
+            </p>
+            <p>
+              <strong>Start Date:</strong>{" "}
+              {new Date(trekking.startDate).toLocaleDateString()}
+            </p>
+            <p>
+              <strong>Duration:</strong> {trekking.trekDuration}
+            </p>
+            <p>
+              <strong>Distance:</strong> {trekking.trekDistance} km
+            </p>
+            <p>
+              <strong>Difficulty:</strong> {trekking.difficulty}
+            </p>
+            <p>
+              <strong>Max Participants:</strong> {trekking.maxParticipants}
+            </p>
+            <p>
+              <strong>Cost per Person:</strong> ₹{trekking.costPerPerson}
+            </p>
+            <p>
+              <strong>Description:</strong> {trekking.description}
+            </p>
+          </div>
+        </div>
+
+        {/* Right Side - Trekking Image */}
+        {trekking.image && (
+          <div className="flex-1 flex justify-center items-center">
+            <img
+              src={trekking.image}
+              alt={trekking.name}
+              className="w-64 h-64 object-cover rounded-lg shadow-md"
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Close Button */}
+      <button
+        className="mt-5 bg-red-500 text-white px-4 py-2 rounded-md block mx-auto"
+        onClick={onClose}
+      >
+        Close
+      </button>
+    </Modal>
+  );
+};
+
 const Trekking = () => {
   const [trekkingList, setTrekkingList] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedTrekking, setSelectedTrekking] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [viewModalIsOpen, setViewModalIsOpen] = useState(false);
+  const [selectedTrekView, setSelectedTrekView] = useState(null);
 
   const fetchTrekking = async () => {
     setLoading(true);
     try {
       const response = await loadTreks();
-      setTrekkingList(response.data.trekking || []);
+      console.log("📥 Fetched Trekking Data:", response.data); // ✅ Debugging log
+      setTrekkingList(response.data.trekList || []); // ✅ Use 'trekList' instead of 'trekking'
     } catch (error) {
-      console.error("Error fetching trekking:", error);
+      console.error("❌ Error fetching trekking:", error);
       Swal.fire("Error!", "Failed to load trekking.", "error");
     } finally {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchTrekking();
   }, []);
@@ -52,6 +124,15 @@ const Trekking = () => {
   const closeModal = () => {
     setSelectedTrekking(null);
     setModalIsOpen(false);
+  };
+  const openViewModal = (trek) => {
+    setSelectedTrekView(trek);
+    setViewModalIsOpen(true);
+  };
+
+  const closeViewModal = () => {
+    setSelectedTrekView(null);
+    setViewModalIsOpen(false);
   };
 
   const handleDeleteTrekking = async (trekkingId) => {
@@ -173,12 +254,21 @@ const Trekking = () => {
                     <TableCell>{trek.trekDistance} km</TableCell>
                     <TableCell>₹{trek.costPerPerson}</TableCell>
                     <TableCell>
+                      {/* 👁 View Button */}
+                      <button
+                        className="bg-blue-500 text-white px-3 py-1 rounded mr-2 hover:scale-105 transition-transform"
+                        onClick={() => openViewModal(trek)}
+                      >
+                        👁 View
+                      </button>
+                      {/* ✏ Edit Button */}
                       <button
                         className="bg-yellow-500 text-white px-3 py-1 rounded mr-2 hover:scale-105 transition-transform"
                         onClick={() => openModal(trek)}
                       >
                         ✏️ Edit
                       </button>
+                      {/* 🗑 Delete Button */}
                       <button
                         className="bg-red-500 text-white px-3 py-1 rounded hover:scale-105 transition-transform"
                         onClick={() => handleDeleteTrekking(trek._id)}
@@ -196,6 +286,11 @@ const Trekking = () => {
             onClose={closeModal}
             onSubmit={handleSubmit}
             trekking={selectedTrekking}
+          />
+          <ViewTrekkingModal
+            isOpen={viewModalIsOpen}
+            onClose={closeViewModal}
+            trekking={selectedTrekView}
           />
         </div>
       </div>

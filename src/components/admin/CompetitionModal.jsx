@@ -136,6 +136,9 @@ const CompetitionModal = ({ isOpen, onClose, onSubmit, competition }) => {
     status: competition?.status ?? "inactive",
     images: [],
   });
+  useEffect(() => {
+    setCurrentStep(1); // Reset to step 1 when modal opens
+  }, [isOpen]);
 
   useEffect(() => {
     if (competition) {
@@ -554,13 +557,6 @@ const CompetitionModal = ({ isOpen, onClose, onSubmit, competition }) => {
                   </div>
                 </div>
 
-                {/* Add error debugging */}
-                {Object.keys(errors).length > 0 && (
-                  <div className="text-red-500 text-sm">
-                    Form validation errors: {JSON.stringify(errors)}
-                  </div>
-                )}
-
                 <div className="flex justify-between mt-8">
                   <button
                     type="button"
@@ -676,9 +672,9 @@ const CompetitionModal = ({ isOpen, onClose, onSubmit, competition }) => {
                     maxLength="500"
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   />
-                  <div className="text-sm text-gray-500 mt-1">
+                  {/* <div className="text-sm text-gray-500 mt-1">
                     {values.description}
-                  </div>
+                  </div> */}
                   <ErrorMessage
                     name="description"
                     component="div"
@@ -702,20 +698,6 @@ const CompetitionModal = ({ isOpen, onClose, onSubmit, competition }) => {
                     {competition ? "Update" : "Add"} Competition
                   </button>
                 </div>
-                {/* Add error debugging */}
-                {Object.keys(errors).length > 0 && (
-                  <div className="text-red-500 text-sm mt-2">
-                    Validation errors: {JSON.stringify(errors)}
-                  </div>
-                )}
-                {/* Add form data debugging */}
-                {
-                  <div className="mt-4 p-2 bg-gray-100 rounded">
-                    <pre className="text-xs">
-                      Current form data: {JSON.stringify(values, null, 2)}
-                    </pre>
-                  </div>
-                }
               </Form>
             )}
           </Formik>

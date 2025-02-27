@@ -132,6 +132,10 @@ const TrekkingModal = ({ isOpen, onClose, onSubmit, trek }) => {
     }
   }, [trek]);
 
+  useEffect(() => {
+    setCurrentStep(1); // Reset to step 1 when modal opens
+  }, [isOpen]);
+
   const handleImageChange = (event, setFieldValue) => {
     const files = Array.from(event.target.files);
     if (files.length > 0) {
@@ -141,7 +145,7 @@ const TrekkingModal = ({ isOpen, onClose, onSubmit, trek }) => {
     }
   };
 
-  const nextStep = (values,{setSubmitting}) => {
+  const nextStep = (values, { setSubmitting }) => {
     console.log("NextStep called with values:", values);
     console.log("Current step before increment:", currentStep);
     setFormData((prevData) => {

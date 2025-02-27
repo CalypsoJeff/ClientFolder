@@ -28,46 +28,64 @@ const ViewCompetitionModal = ({ isOpen, onClose, competition }) => {
     <Modal
       isOpen={isOpen}
       onRequestClose={onClose}
-      className="bg-white p-6 rounded-lg shadow-xl max-w-2xl mx-auto mt-20 overflow-auto max-h-[90vh]"
+      className="bg-white p-6 rounded-lg shadow-xl max-w-3xl mx-auto mt-20 overflow-auto max-h-[90vh]"
       overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start"
     >
-      <h2 className="text-2xl font-bold mb-4">{competition.name}</h2>
-      <div className="space-y-3">
-        <p>
-          <strong>Category:</strong> {competition.category.join(", ")}
-        </p>
-        <p>
-          <strong>Location:</strong> {competition.place},{" "}
-          {competition.state.join(", ")}
-        </p>
-        <p>
-          <strong>Date:</strong>{" "}
-          {new Date(competition.date).toLocaleDateString()}
-        </p>
-        <p>
-          <strong>Time:</strong> {competition.time}
-        </p>
-        <p>
-          <strong>Duration:</strong> {competition.duration} hours
-        </p>
-        <p>
-          <strong>Type:</strong> {competition.type.join(", ")}
-        </p>
-        <p>
-          <strong>Slots Available:</strong> {competition.maxRegistrations}
-        </p>
-        <p>
-          <strong>Cost:</strong> ₹{competition.cost}
-        </p>
-        <p>
-          <strong>Status:</strong> {competition.status}
-        </p>
-        <p>
-          <strong>Description:</strong> {competition.description}
-        </p>
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Left Side - Text Content */}
+        <div className="flex-1">
+          <h2 className="text-2xl font-bold mb-4">{competition.name}</h2>
+          <div className="space-y-3">
+            <p>
+              <strong>Category:</strong> {competition.category.join(", ")}
+            </p>
+            <p>
+              <strong>Location:</strong> {competition.place},{" "}
+              {competition.state.join(", ")}
+            </p>
+            <p>
+              <strong>Date:</strong>{" "}
+              {new Date(competition.date).toLocaleDateString()}
+            </p>
+            <p>
+              <strong>Time:</strong> {competition.time}
+            </p>
+            <p>
+              <strong>Duration:</strong> {competition.duration} hours
+            </p>
+            <p>
+              <strong>Type:</strong> {competition.type.join(", ")}
+            </p>
+            <p>
+              <strong>Slots Available:</strong> {competition.maxRegistrations}
+            </p>
+            <p>
+              <strong>Cost:</strong> ₹{competition.cost}
+            </p>
+            <p>
+              <strong>Status:</strong> {competition.status}
+            </p>
+            <p>
+              <strong>Description:</strong> {competition.description}
+            </p>
+          </div>
+        </div>
+
+        {/* Right Side - Competition Image */}
+        {competition.image && (
+          <div className="flex-1 flex justify-center items-center">
+            <img
+              src={competition.image}
+              alt={competition.name}
+              className="max-w-full h-auto rounded-lg shadow-md"
+            />
+          </div>
+        )}
       </div>
+
+      {/* Close Button */}
       <button
-        className="mt-5 bg-gray-500 text-white px-4 py-2 rounded-md"
+        className="mt-5 bg-red-500 text-white px-4 py-2 rounded-md block mx-auto"
         onClick={onClose}
       >
         Close
