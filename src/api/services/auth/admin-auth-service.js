@@ -1,8 +1,8 @@
 import CONFIG_KEYS from "../../../config";
 import adminAxiosInstance from "../../middlewares/adminInterceptor";
 
-export const adminLogin = (endpoint, userData) => {
-  const response = adminAxiosInstance.post(
+export const adminLogin = async (endpoint, userData) => {
+  const response = await adminAxiosInstance.post(
     `${CONFIG_KEYS.API_BASE_URL}/${endpoint}`,
     userData
   );

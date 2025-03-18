@@ -15,9 +15,9 @@ import SideBar from "../../components/admin/SideBar";
 import { Menu } from "lucide-react";
 import {
   addCategory,
-  deleteCategory,
   editCategory,
   loadCategories,
+  toggleCategory,
 } from "../../api/endpoints/categories/admin-categories";
 
 Modal.setAppElement("#root");
@@ -70,40 +70,62 @@ const Category = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log("📝 Submitting Category:", formData);
+
+      let response;
       if (selectedCategory) {
-        await editCategory(selectedCategory._id, formData);
+        response = await editCategory(selectedCategory._id, formData);
         Swal.fire("Updated!", "Category has been updated.", "success");
       } else {
-        await addCategory(formData);
+        response = await addCategory(formData);
         Swal.fire("Added!", "Category has been added.", "success");
       }
-      await fetchCategories();
+
+      console.log("✅ Backend Response:", response.data); // Log backend response
+
+      await fetchCategories(); // ✅ Ensure this runs to refresh data
       closeModal();
     } catch (error) {
-      console.error("Error submitting category:", error);
+      console.error(
+        "❌ Error submitting category:",
+        error.response?.data || error.message
+      );
       Swal.fire("Error!", "Failed to save category.", "error");
     }
   };
 
-  // Handle Delete Category
-  const handleDelete = async (categoryId) => {
+  const handleToggleStatus = async (categoryId, currentStatus) => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "This action will unlist the category!",
+      title: `Are you sure?`,
+      text: `This will ${
+        currentStatus === "active" ? "deactivate" : "activate"
+      } the category!`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, Unlist it!",
+      confirmButtonText: `Yes, ${
+        currentStatus === "active" ? "Deactivate" : "Activate"
+      } it!`,
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await deleteCategory(categoryId);
-          Swal.fire("Deleted!", "Category has been unlisted.", "success");
+          const response = await toggleCategory(categoryId);
+          console.log("✅ Category Status Response:", response.data);
+
+          Swal.fire(
+            `${currentStatus === "active" ? "Deactivated" : "Activated"}!`,
+            `Category has been ${
+              currentStatus === "active" ? "deactivated" : "activated"
+            }.`,
+            "success"
+          );
+
+          // Refresh categories list after update
           await fetchCategories();
         } catch (error) {
-          console.error("Error deleting category:", error);
-          Swal.fire("Error!", "Failed to delete category.", "error");
+          console.error("❌ Error updating category status:", error);
+          Swal.fire("Error!", "Failed to update category status.", "error");
         }
       }
     });
@@ -164,10 +186,16 @@ const Category = () => {
                         ✏️ Edit
                       </button>
                       <button
-                        className="bg-red-500 text-white px-3 py-1 rounded hover:scale-105 transition-transform"
-                        onClick={() => handleDelete(category._id)}
+                        className={`px-3 py-1 rounded hover:scale-105 transition-transform ${
+                          category.status === "active"
+                            ? "bg-red-500"
+                            : "bg-green-500"
+                        } text-white`}
+                        onClick={() =>
+                          handleToggleStatus(category._id, category.status)
+                        }
                       >
-                        🗑️ Unlist
+                        {category.status === "active" ? "🛑 Unlist" : "✅ List"}
                       </button>
                     </TableCell>
                   </TableRow>

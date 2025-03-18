@@ -16,11 +16,20 @@ const END_POINTS = {
   ADD_TREKKING: "api/admin/add-trekking",
   EDIT_TREKKING: "api/admin/edit-trekking",
   DELETE_TREKKING: "api/admin/delete-trekking",
-  ADD_CATEGORY: "api/admin/add-category",
-  EDIT_CATEGORY: "api/admin/edit-category",
-  DELETE_CATEGORY: "api/admin/delete-category",
-  LOAD_CATEGORIES: "api/admin/category"
-
-
+  ADD_CATEGORY: "api/admin/add-product-category",
+  EDIT_CATEGORY: "api/admin/edit-product-categories",
+  TOGGLE_CATEGORY: "api/admin/product-categories-toggle",
+  LOAD_CATEGORIES: "api/admin/product-categories",
+  ADD_PRODUCT: "api/admin/add-product",
+  EDIT_PRODUCT: "api/admin/edit-product",
+  TOGGLE_PRODUCT: "api/admin/product",
+  LOAD_PRODUCTS: "api/admin/products",
+  USERLIST:"api/admin/users",
+  LOAD_USER_PRODUCTS: "api/user/products",
+  LOAD_SHOP_PRODUCTS: "api/user/shop-products",
+  LOAD_PRODUCT_DETAILS:"api/user/products",
+  ADD_TO_CART: "api/user/add-to-cart",
+  LOAD_USER_COMPETITIONS: "api/user/competitions",
+  LOAD_USER_TREKKINGS: "api/user/trekkings",
 };
 export default END_POINTS;

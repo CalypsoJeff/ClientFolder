@@ -3,7 +3,7 @@ import adminAxiosInstance from "../../middlewares/adminInterceptor";
 
 export const load_Categories = async (endpoint) => {
     try {
-        const response = adminAxiosInstance.get(
+        const response = await adminAxiosInstance.get(
             `${CONFIG_KEYS.API_BASE_URL}/${endpoint}`,
         );
         return response;
@@ -15,36 +15,38 @@ export const load_Categories = async (endpoint) => {
 
 export const add_Category = async (endpoint, categoryData) => {
     try {
-        const response = adminAxiosInstance.post(
+        const response = await adminAxiosInstance.post(
             `${CONFIG_KEYS.API_BASE_URL}/${endpoint}`,
             categoryData,
-            { headers: { "Content-Type": "multipart/form-data" } }
+            { headers: { "Content-Type": "application/json" } }
         );
         return response;
     } catch (error) {
-        console.error("Error adding trekking:", error);
+        console.error("Error adding catgeory:", error);
         throw error;
     }
 }
 
 export const edit_Category = async (endpoint, categoryData) => {
     try {
-        const response = adminAxiosInstance.put(
+        const response = await adminAxiosInstance.put(
             `${CONFIG_KEYS.API_BASE_URL}/${endpoint}`,
             categoryData,
-            { headers: { "Content-Type": "multipart/form-data" } }
+            { headers: { "Content-Type": "application/json" } }
         );
+
         return response;
     } catch (error) {
-        console.error("Error adding trekking:", error);
+        console.error("❌ Error editing category:", error.response?.data || error.message);
         throw error;
     }
-}
+};
 
-export const delete_Category = async (endpoint) => {
+
+export const toggle_Category = async (endpoint) => {
     try {
-        const response = adminAxiosInstance.delete(
-            `${CONFIG_KEYS.API_BASE_URL}/${endpoint}`,
+        const response = await adminAxiosInstance.patch(
+            `${CONFIG_KEYS.API_BASE_URL}/${endpoint}`, {}
         );
         return response;
     } catch (error) {

@@ -88,19 +88,24 @@ const OTPInput = () => {
     if (otpValue.length === 6 && email) {
       try {
         const response = await otpVerificationAdmin({ email, otp: otpValue });
-        if (response.status === 200) {
-          console.log("OTP verified successfully:", response.data);
+
+        console.log("Full Response:", response);
+
+        // Check for 201 instead of 200
+        if (response.status === 201) {
+          console.log("✅ OTP verified successfully:", response.data);
+          navigate("/admin/dashboard");
         } else {
-          console.error("OTP verification failed.");
+          console.error("❌ OTP verification failed:", response.data);
         }
       } catch (error) {
-        console.error("Error verifying OTP:", error);
+        console.error("🚨 Error verifying OTP:", error);
       } finally {
         setOtp(new Array(6).fill(""));
         inputRefs.current[0]?.focus();
       }
     } else {
-      console.error("Invalid email or OTP.");
+      console.error("❌ Invalid email or OTP.");
     }
   };
 

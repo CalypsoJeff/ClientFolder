@@ -11,15 +11,15 @@ import {
 } from "../../components/ui/table";
 import Modal from "react-modal";
 import { Menu } from "lucide-react";
-// import {
-//   addProduct,
-//   editProduct,
-//   deleteProduct,
-//   loadProducts,
-// } from "../../api/endpoints/admin-products";
-// import { loadCategories } from "../../api/endpoints/admin-categories";
+
 import SideBar from "../../components/admin/SideBar";
 import ProductModal from "../../components/admin/ProductModal";
+import { loadCategories } from "../../api/endpoints/categories/admin-categories";
+import {
+  addProduct,
+  editProduct,
+  loadProducts,
+} from "../../api/endpoints/products/admin-products";
 
 Modal.setAppElement("#root");
 
@@ -30,6 +30,7 @@ const Product = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [viewModalOpen, setViewModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -41,13 +42,19 @@ const Product = () => {
     images: [],
   });
 
-  // Fetch Products
   const fetchProducts = async () => {
     setLoading(true);
     try {
       const response = await loadProducts();
-      console.log("📂 Products Loaded:", response.data.products);
-      setProducts(response.data.products || []);
+      console.log(response.data);
+      console.log("📂 Products Loaded:", response.data.Products);
+
+      if (response.data.Products.length === 0) {
+        console.warn("⚠️ No products found in API response.");
+      }
+
+      setProducts(response.data.Products || []);
+      console.log("✅ Updated Products State:", products); // Debugging state update
     } catch (error) {
       console.error("❌ Error fetching products:", error);
       Swal.fire("Error!", "Failed to load products.", "error");
@@ -100,6 +107,12 @@ const Product = () => {
     }
     setModalIsOpen(true);
   };
+  // Open Modal to View Product Details
+  const openViewModal = (product) => {
+    setSelectedProduct(product);
+    setViewModalOpen(true);
+  };
+  const closeViewModal = () => setViewModalOpen(false);
 
   // Close Modal
   const closeModal = () => {
@@ -107,48 +120,43 @@ const Product = () => {
     setSelectedProduct(null);
   };
 
-  // Handle Submit (Add/Edit)
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (formData) => {
     try {
-      const payload = { ...formData };
+      const formDataToSend = new FormData();
+
+      // Append text fields
+      Object.keys(formData).forEach((key) => {
+        if (key === "images") {
+          // Append images as an array
+          formData.images.forEach((file) => {
+            formDataToSend.append("images", file); // ✅ This matches multer field
+          });
+        } else if (Array.isArray(formData[key])) {
+          formDataToSend.append(key, JSON.stringify(formData[key])); // ✅ Convert array to JSON
+        } else {
+          formDataToSend.append(key, formData[key]);
+        }
+      });
+
+      console.log("📝 FormData Sent:");
+      for (let pair of formDataToSend.entries()) {
+        console.log(pair[0], pair[1]); // Debugging
+      }
+
       if (selectedProduct) {
-        await editProduct(selectedProduct._id, payload);
+        await editProduct(selectedProduct._id, formDataToSend);
         Swal.fire("Updated!", "Product has been updated.", "success");
       } else {
-        await addProduct(payload);
+        await addProduct(formDataToSend);
         Swal.fire("Added!", "Product has been added.", "success");
       }
+
       await fetchProducts();
       closeModal();
     } catch (error) {
       console.error("❌ Error submitting product:", error);
       Swal.fire("Error!", "Failed to save product.", "error");
     }
-  };
-
-  // Handle Delete Product
-  const handleDelete = async (productId) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "This action will unlist the product!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, Unlist it!",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deleteProduct(productId);
-          Swal.fire("Deleted!", "Product has been unlisted.", "success");
-          await fetchProducts();
-        } catch (error) {
-          console.error("❌ Error deleting product:", error);
-          Swal.fire("Error!", "Failed to delete product.", "error");
-        }
-      }
-    });
   };
 
   return (
@@ -193,29 +201,50 @@ const Product = () => {
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
-              {/* <TableBody>
-                {products.map((product) => (
-                  <TableRow key={product._id}>
-                    <TableCell>{product.name}</TableCell>
-                    <TableCell>₹{product.price}</TableCell>
-                    <TableCell>{product.category?.name}</TableCell>
-                    <TableCell>
-                      <button
-                        className="bg-yellow-500 text-white px-3 py-1 rounded mr-2 hover:scale-105 transition-transform"
-                        onClick={() => openModal(product)}
-                      >
-                        ✏️ Edit
-                      </button>
-                      <button
-                        className="bg-red-500 text-white px-3 py-1 rounded hover:scale-105 transition-transform"
-                        onClick={() => handleDelete(product._id)}
-                      >
-                        🗑️ Unlist
-                      </button>
+              <TableBody>
+                {products.length > 0 ? (
+                  products.map((product) => (
+                    <TableRow key={product._id}>
+                      <TableCell>{product.name}</TableCell>
+                      <TableCell>₹{product.price}</TableCell>
+                      <TableCell>
+                        {product.category?.name
+                          ? product.category.name
+                          : "Uncategorized"}
+                      </TableCell>
+                      <TableCell>
+                        <button
+                          className="bg-blue-500 text-white px-3 py-1 rounded mr-2"
+                          onClick={() => openViewModal(product)}
+                        >
+                          👁️ View
+                        </button>
+                        <button
+                          className="bg-yellow-500 text-white px-3 py-1 rounded mr-2 hover:scale-105 transition-transform"
+                          onClick={() => openModal(product)}
+                        >
+                          ✏️ Edit
+                        </button>
+                        <button
+                          className="bg-red-500 text-white px-3 py-1 rounded hover:scale-105 transition-transform"
+                          onClick={() => console.log("Unlist", product._id)}
+                        >
+                          🗑️ Unlist
+                        </button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={4}
+                      className="text-center text-gray-500"
+                    >
+                      🚫 No products available.
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody> */}
+                )}
+              </TableBody>
             </Table>
           )}
 
@@ -224,7 +253,53 @@ const Product = () => {
             onClose={closeModal}
             onSubmit={handleSubmit}
             product={selectedProduct}
+            categories={categories}
           />
+          {/* View Product Modal */}
+          <Modal
+            isOpen={viewModalOpen}
+            onRequestClose={closeViewModal}
+            contentLabel="View Product Details"
+            className="bg-white p-6 rounded-lg max-w-lg mx-auto shadow-lg"
+          >
+            <h2 className="text-2xl font-bold mb-4">Product Details</h2>
+            {selectedProduct && (
+              <div className="space-y-4">
+                <p>
+                  <strong>Name:</strong> {selectedProduct.name}
+                </p>
+                <p>
+                  <strong>Price:</strong> ₹{selectedProduct.price}
+                </p>
+                <p>
+                  <strong>Category:</strong>{" "}
+                  {selectedProduct.category?.name || "Uncategorized"}
+                </p>
+                <p>
+                  <strong>Description:</strong> {selectedProduct.description}
+                </p>
+                {selectedProduct.images &&
+                  selectedProduct.images.length > 0 && (
+                    <div className="grid grid-cols-2 gap-4 mt-4">
+                      {selectedProduct.images.map((image, index) => (
+                        <img
+                          key={index}
+                          src={image}
+                          alt={`Product Image ${index + 1}`}
+                          className="w-full h-40 object-cover rounded-md shadow"
+                        />
+                      ))}
+                    </div>
+                  )}
+              </div>
+            )}
+            <button
+              className="bg-red-500 text-white px-4 py-2 rounded mt-4 w-full"
+              onClick={closeViewModal}
+            >
+              Close
+            </button>
+          </Modal>
         </div>
       </div>
     </div>

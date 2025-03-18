@@ -1,5 +1,4 @@
 import axios from "axios";
-// import { API_BASE_URL } from "../../config";
 import CustomApiError from "../../utils/CustomApiError";
 import CONFIG_KEYS from "../../config";
 const { API_BASE_URL } = CONFIG_KEYS;

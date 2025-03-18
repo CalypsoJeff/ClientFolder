@@ -15,12 +15,12 @@ import {
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/admin/dashboard" },
   { icon: Users, label: "User List", path: "/admin/userlist" },
-  { icon: ActivityIcon, label: "Fitness", path: "/admin/fitness" },
   { icon: Briefcase, label: "Competitions", path: "/admin/competitions" },
-  { icon: LayoutList, label: "Riders", path: "/admin/riders" },
+  { icon: FileText, label: "Trekking", path: "/admin/trekking" },
   { icon: Calendar, label: "Category", path: "/admin/category" },
   { icon: ShoppingCartIcon, label: "Products", path: "/admin/products" },
-  { icon: FileText, label: "Trekking", path: "/admin/trekking" },
+  { icon: ActivityIcon, label: "Fitness", path: "/admin/fitness" },
+  { icon: LayoutList, label: "Riders", path: "/admin/riders" },
   { icon: Calendar, label: "Bookings", path: "/admin/bookings" },
 ];
 
@@ -33,7 +33,7 @@ export default function SideBar({ isOpen, toggleSidebar }) {
     >
       {/* Sidebar Header */}
       <div className="flex items-center justify-between h-16 px-6 bg-indigo-600 text-white">
-        <span className="text-2xl font-semibold">Admin Panel</span>
+        <span className="text-2xl font-semibold">ORCA</span>
         <button onClick={toggleSidebar} className="lg:hidden">
           <X size={24} />
         </button>

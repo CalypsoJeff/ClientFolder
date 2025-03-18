@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable react/prop-types */
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -20,7 +21,7 @@ import { Label } from "../../components/ui/label";
 import { Plus, Minus, X } from "lucide-react";
 import { Card, CardContent } from "../../components/ui/card";
 
-const AVAILABLE_SIZES = ['S', 'M', 'L', 'XL', 'XXL', 'Custom'];
+const AVAILABLE_SIZES = ["S", "M", "L", "XL", "XXL", "Custom"];
 
 const ProductModal = ({ isOpen, onClose, onSubmit, product, categories }) => {
   const [formData, setFormData] = useState({
@@ -32,7 +33,7 @@ const ProductModal = ({ isOpen, onClose, onSubmit, product, categories }) => {
     brand: "",
     material: "",
     images: [],
-    sizes: [{ size: 'S', colors: [{ color: '', stock: 0 }] }],
+    sizes: [{ size: "S", colors: [{ color: "", stock: 0 }] }],
   });
 
   useEffect(() => {
@@ -46,9 +47,10 @@ const ProductModal = ({ isOpen, onClose, onSubmit, product, categories }) => {
         brand: product.brand || "",
         material: product.material || "",
         images: product.images || [],
-        sizes: product.sizes?.length > 0 
-          ? product.sizes 
-          : [{ size: 'S', colors: [{ color: '', stock: 0 }] }],
+        sizes:
+          product.sizes?.length > 0
+            ? product.sizes
+            : [{ size: "S", colors: [{ color: "", stock: 0 }] }],
       });
     } else {
       setFormData({
@@ -60,7 +62,7 @@ const ProductModal = ({ isOpen, onClose, onSubmit, product, categories }) => {
         brand: "",
         material: "",
         images: [],
-        sizes: [{ size: 'S', colors: [{ color: '', stock: 0 }] }],
+        sizes: [{ size: "S", colors: [{ color: "", stock: 0 }] }],
       });
     }
   }, [product]);
@@ -90,7 +92,10 @@ const ProductModal = ({ isOpen, onClose, onSubmit, product, categories }) => {
   const addSize = () => {
     setFormData({
       ...formData,
-      sizes: [...formData.sizes, { size: 'S', colors: [{ color: '', stock: 0 }] }],
+      sizes: [
+        ...formData.sizes,
+        { size: "S", colors: [{ color: "", stock: 0 }] },
+      ],
     });
   };
 
@@ -101,7 +106,7 @@ const ProductModal = ({ isOpen, onClose, onSubmit, product, categories }) => {
 
   const addColor = (sizeIndex) => {
     const newSizes = [...formData.sizes];
-    newSizes[sizeIndex].colors.push({ color: '', stock: 0 });
+    newSizes[sizeIndex].colors.push({ color: "", stock: 0 });
     setFormData({ ...formData, sizes: newSizes });
   };
 
@@ -114,8 +119,8 @@ const ProductModal = ({ isOpen, onClose, onSubmit, product, categories }) => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(formData);
+    e.preventDefault(); // ✅ Prevent default form submission
+    onSubmit(formData); // ✅ Call with formData instead of event
   };
 
   return (
@@ -175,20 +180,28 @@ const ProductModal = ({ isOpen, onClose, onSubmit, product, categories }) => {
 
               <div className="space-y-2">
                 <Label htmlFor="category">Category</Label>
-                <Select 
+                <Select
                   name="category"
                   value={formData.category}
-                  onValueChange={(value) => handleChange({ target: { name: 'category', value }})}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, category: value })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
                   <SelectContent>
-                    {/* {categories.map((cat) => (
-                      <SelectItem key={cat._id} value={cat._id}>
-                        {cat.name}
+                    {categories.length > 0 ? (
+                      categories.map((cat) => (
+                        <SelectItem key={cat._id} value={cat._id}>
+                          {cat.name}
+                        </SelectItem>
+                      ))
+                    ) : (
+                      <SelectItem disabled value="">
+                        No categories available
                       </SelectItem>
-                    ))} */}
+                    )}
                   </SelectContent>
                 </Select>
               </div>
@@ -230,11 +243,16 @@ const ProductModal = ({ isOpen, onClose, onSubmit, product, categories }) => {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <Label>Sizes and Colors</Label>
-                <Button type="button" onClick={addSize} variant="outline" size="sm">
+                <Button
+                  type="button"
+                  onClick={addSize}
+                  variant="outline"
+                  size="sm"
+                >
                   <Plus className="w-4 h-4 mr-1" /> Add Size
                 </Button>
               </div>
-              
+
               <div className="space-y-4">
                 {formData.sizes.map((sizeData, sizeIndex) => (
                   <Card key={sizeIndex}>
@@ -243,7 +261,9 @@ const ProductModal = ({ isOpen, onClose, onSubmit, product, categories }) => {
                         <div className="w-1/3">
                           <Select
                             value={sizeData.size}
-                            onValueChange={(value) => handleSizeChange(sizeIndex, value)}
+                            onValueChange={(value) =>
+                              handleSizeChange(sizeIndex, value)
+                            }
                           >
                             <SelectTrigger>
                               <SelectValue placeholder="Select size" />
@@ -258,7 +278,7 @@ const ProductModal = ({ isOpen, onClose, onSubmit, product, categories }) => {
                           </Select>
                         </div>
                         <div className="flex gap-2">
-                          <Button 
+                          <Button
                             type="button"
                             onClick={() => addColor(sizeIndex)}
                             variant="outline"
@@ -281,12 +301,20 @@ const ProductModal = ({ isOpen, onClose, onSubmit, product, categories }) => {
 
                       <div className="space-y-2">
                         {sizeData.colors.map((colorData, colorIndex) => (
-                          <div key={colorIndex} className="flex gap-2 items-center">
+                          <div
+                            key={colorIndex}
+                            className="flex gap-2 items-center"
+                          >
                             <Input
                               placeholder="Color"
                               value={colorData.color}
-                              onChange={(e) => 
-                                handleColorChange(sizeIndex, colorIndex, 'color', e.target.value)
+                              onChange={(e) =>
+                                handleColorChange(
+                                  sizeIndex,
+                                  colorIndex,
+                                  "color",
+                                  e.target.value
+                                )
                               }
                               className="flex-1"
                             />
@@ -294,8 +322,13 @@ const ProductModal = ({ isOpen, onClose, onSubmit, product, categories }) => {
                               type="number"
                               placeholder="Stock"
                               value={colorData.stock}
-                              onChange={(e) => 
-                                handleColorChange(sizeIndex, colorIndex, 'stock', parseInt(e.target.value))
+                              onChange={(e) =>
+                                handleColorChange(
+                                  sizeIndex,
+                                  colorIndex,
+                                  "stock",
+                                  parseInt(e.target.value)
+                                )
                               }
                               className="w-24"
                               min="0"
@@ -303,7 +336,9 @@ const ProductModal = ({ isOpen, onClose, onSubmit, product, categories }) => {
                             {sizeData.colors.length > 1 && (
                               <Button
                                 type="button"
-                                onClick={() => removeColor(sizeIndex, colorIndex)}
+                                onClick={() =>
+                                  removeColor(sizeIndex, colorIndex)
+                                }
                                 variant="destructive"
                                 size="sm"
                               >
@@ -324,9 +359,7 @@ const ProductModal = ({ isOpen, onClose, onSubmit, product, categories }) => {
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit">
-              {product ? "Update" : "Add"}
-            </Button>
+            <Button type="submit">{product ? "Update" : "Add"}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

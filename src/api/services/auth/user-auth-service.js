@@ -1,8 +1,8 @@
 import CONFIG_KEYS from "../../../config";
 import authInstanceAxios from "../../middlewares/interceptor";
 
-export const login = (endpoint, userData) => {
-  const response = authInstanceAxios.post(
+export const login = async (endpoint, userData) => {
+  const response = await authInstanceAxios.post(
     `${CONFIG_KEYS.API_BASE_URL}/${endpoint}`,
     userData
   );

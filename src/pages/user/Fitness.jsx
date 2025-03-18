@@ -1,10 +1,9 @@
-import React, { useState } from "react";
 import Header from "../../components/user/Header";
 
 const Fitness = () => {
   return (
     <section>
-     <Header/>
+      <Header />
       <div className="relative pt-12 bg-gray-50 sm:pt-16 lg:py-36 xl:py-48">
         <div className="absolute inset-0 hidden lg:block">
           <img
@@ -127,4 +126,4 @@ const Fitness = () => {
     </section>
   );
 };
-export default Fitness
+export default Fitness;

@@ -3,7 +3,7 @@ import adminAxiosInstance from "../../middlewares/adminInterceptor";
 
 export const competitionAdd = async (endpoint, userData) => {
     try {
-        const response = adminAxiosInstance.post(
+        const response = await adminAxiosInstance.post(
             `${CONFIG_KEYS.API_BASE_URL}/${endpoint}`,
             userData,
             { headers: { "Content-Type": "multipart/form-data" } }
@@ -17,7 +17,7 @@ export const competitionAdd = async (endpoint, userData) => {
 
 export const competitionEdit = async (endpoint, userData) => {
     try {
-        const response = adminAxiosInstance.put(
+        const response = await adminAxiosInstance.put(
             `${CONFIG_KEYS.API_BASE_URL}/${endpoint}`,
             userData,
             { headers: { "Content-Type": "multipart/form-data" } }
@@ -31,7 +31,7 @@ export const competitionEdit = async (endpoint, userData) => {
 
 export const competitionDelete = async (endpoint) => {
     try {
-        const response = adminAxiosInstance.delete(
+        const response = await adminAxiosInstance.delete(
             `${CONFIG_KEYS.API_BASE_URL}/${endpoint}`,
         );
         return response;
@@ -44,7 +44,7 @@ export const competitionDelete = async (endpoint) => {
 
 export const competitionLoad = async (endpoint) => {
     try {
-        const response = adminAxiosInstance.get(
+        const response = await adminAxiosInstance.get(
             `${CONFIG_KEYS.API_BASE_URL}/${endpoint}`,
         );
         return response;

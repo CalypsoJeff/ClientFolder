@@ -13,6 +13,7 @@ import { Menu } from "lucide-react";
 // Import your API endpoints
 // import { blockUser, unblockUser, loadUsers } from "../../api/endpoints/admin-users";
 import SideBar from "../../components/admin/SideBar";
+import { userList } from "../../api/endpoints/users/admin-users";
 
 const UserList = () => {
   const [users, setUsers] = useState([
@@ -38,7 +39,7 @@ const UserList = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await loadUsers();
+      const response = await userList();
       console.log("📂 Users Loaded:", response.data.users);
       setUsers(response.data.users || []);
     } catch (error) {

@@ -46,27 +46,27 @@ export default function Login() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label
-              htmlFor="email"
+              htmlFor="phone"
               className="block text-sm font-medium text-gray-700"
             >
-              Email
+              Phone
             </label>
             <input
-              type="email"
-              id="email"
-              {...register("email", {
-                required: "Email is required",
+              type="phone"
+              id="phone"
+              {...register("phone", {
+                required: "Phone Number is required",
                 pattern: {
-                  value: /^\S+@\S+$/i,
-                  message: "Invalid email address",
+                  value: /^[0-9\b]+$/,
+                  message: "Invalid phone number",
                 },
               })}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              placeholder="Enter your email"
+              placeholder="Enter your Phone Number"
             />
-            {errors.email && (
+            {errors.number && (
               <p className="mt-1 text-sm text-red-600">
-                {errors.email.message}
+                {errors.number.message}
               </p>
             )}
           </div>
